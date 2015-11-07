@@ -1,7 +1,8 @@
 www:
-  build: www
-  ports:
-    - 8000:5000
+  #build: www
+  image: magrossi/trainingwheels
+  expose:
+    - "5000"
   links:
     - redis
   user: nobody
@@ -15,3 +16,13 @@ www:
 redis:
   image: redis
   mem_limit: 50000000
+
+lb:
+  image: tutum/haproxy
+  links:
+   - www
+  ports:
+   - "80:80"
+  environment:
+   - BACKEND_PORT=5000
+   - BALANCE=roundrobin
